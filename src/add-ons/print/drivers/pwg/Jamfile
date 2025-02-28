@@ -1,0 +1,12 @@
+SubDir HAIKU_TOP src add-ons print drivers pwg ;
+
+SubDirHdrs [ FDirName $(HAIKU_TOP) headers libs print libprint ] ;
+
+AddResources PWG : pwg.rdef ;
+
+Addon PWG :
+	pwg.cpp
+	PWGCap.cpp
+	pwgentry.cpp
+	: be libprint.a [ TargetLibstdc++ ]
+;

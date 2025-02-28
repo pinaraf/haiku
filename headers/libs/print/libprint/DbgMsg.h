@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 
-// #define DBG
+#define DBG 1
 
 #ifdef DBG
 	void write_debug_stream(const char *, ...)  __PRINTFLIKE(1,2);

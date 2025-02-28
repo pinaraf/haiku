@@ -243,6 +243,7 @@ SYSTEM_ADD_ONS_PRINT += [ FFilterByBuildFeatures
 	PCL5\ Compatible
 	PCL6\ Compatible
 	PS\ Compatible
+	PWG
 	Preview
 ] ;
 
