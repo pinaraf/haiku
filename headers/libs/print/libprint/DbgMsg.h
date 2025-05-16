@@ -16,7 +16,7 @@
 #define DBG 1
 
 #ifdef DBG
-	void write_debug_stream(const char *, ...)  __PRINTFLIKE(1,2);
+	void write_debug_stream(const char *, ...);
 	void DUMP_BFILE(BFile *file, const char *name);
 	void DUMP_BMESSAGE(BMessage *msg);
 	void DUMP_BDIRECTORY(BDirectory *dir);

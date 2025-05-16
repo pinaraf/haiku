@@ -8,6 +8,9 @@
 
 #include "DbgMsg.h"
 #include <inttypes.h>
+#include <posix/netinet/in.h>
+
+using namespace PWG;
 
 #if 0
 #include <vector>
@@ -45,7 +48,6 @@ PWGDriver::PWGDriver(BMessage* message, PrinterData* printerData,
 bool
 PWGDriver::StartDocument()
 {
-	DBGMSG(("> startDocument\n"));
 	WriteSpoolData("RaS2", 4);
 	return true;
 }
@@ -56,8 +58,56 @@ PWGDriver::StartPage(int page)
 {
 	// TODO: map from job data to the header
 	PWGPageHeader header;
-	memset(&header, 97, sizeof(PWGPageHeader)); // 'a' everywhere
-	// memset(&header, 0, sizeof(PWGPageHeader));
+	memset(&header, 0, sizeof(PWGPageHeader)); // null everywhere
+	memcpy(header.PwgRaster, "PwgRaster", 9);
+
+	// Note : fill this from GetJobData()
+
+	// header.MediaColor: ignored so far
+	// header.MediaType: ignored so far
+	// header.PrintContentOptimize: ignored so far
+	// TODO: fix fields values
+	header.CutMedia = Never;
+	header.Duplex = false;
+	header.HWResolution.x = htonl(600);
+	header.HWResolution.y = htonl(600);
+	header.InsertSheet = false;
+	header.Jog = Never;
+	header.LeadingEdge = ShortEdgeFirst;
+	header.MediaPosition = Auto;
+	header.MediaWeightMetric = 0;	// default
+	header.NumCopies = htonl(1);
+	header.Orientation = Portrait;
+	// 21x29.7 converted to points
+	header.PageSize.x = htonl(595);
+	header.PageSize.y = htonl(842);
+	header.Tumble = false;
+	// 21x29.7 converted to dots
+	header.Width = htonl(4961);
+	header.Height = htonl(7016);
+
+	/* (BitsPerPixel * Width + 7) / 8 */
+	header.BytesPerLine = htonl(uint32_t((24 * 4961 + 7) / 8));
+
+	// RGB_8
+	header.BitsPerColor = htonl(8);
+	header.BitsPerPixel = htonl(24);
+	header.ColorOrder = Chunky;
+	header.ColorSpace = ColorSpaceEnum(htonl(Rgb));
+	header.NumColors = htonl(3);
+
+	header.TotalPageCount = htonl(1);
+	header.CrossFeedTransform = 0;
+	header.FeedTransform = 0;
+	/* would be nice to fill, lead to much smaller images */
+	header.ImageBoxLeft = 0;
+	header.ImageBoxTop = 0;
+	header.ImageBoxRight = 0;
+	header.ImageBoxBottom = 0;
+
+	header.AlternatePrimary = 0xFFFFFF00;
+	header.PrintQuality = Default;
+
 	DBGMSG(("> startPage\n"));
 	WriteSpoolData(&header, sizeof(PWGPageHeader));
 	return true;

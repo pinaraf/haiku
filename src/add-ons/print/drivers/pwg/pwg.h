@@ -8,7 +8,7 @@
 
 #include "GraphicsDriver.h"
 
-
+namespace PWG {
 enum WhenEnum : uint32_t {
 	Never = 0,
 	AfterDocument = 1,
@@ -30,6 +30,7 @@ enum EdgeEnum : uint32_t {
 };
 
 enum MediaPositionEnum : uint32_t {
+	Auto = 0
 };
 
 enum OrientationEnum : uint32_t {
@@ -44,6 +45,13 @@ enum ColorOrderEnum : uint32_t {
 };
 
 enum ColorSpaceEnum : uint32_t {
+	Rgb = 1,
+	Black = 3,
+	Cmyk = 6,
+	Sgray = 18,
+	Srgb = 19,
+	AdobeRgb = 20
+	// more device specific after, if needed
 };
 
 // What is this one?
@@ -114,6 +122,8 @@ static_assert(offsetof(PWGPageHeader, TotalPageCount) == 452, "Invalid offset of
 static_assert(offsetof(PWGPageHeader, AlternatePrimary) == 480, "Invalid offset of field AlternatePrimary");
 static_assert(offsetof(PWGPageHeader, VendorData) == 516, "Invalid offset of field VendorData");
 static_assert(sizeof(PWGPageHeader) == 1796, "Invalid size for the PWGPageHeader structure");
+
+};
 
 class PWGDriver : public GraphicsDriver {
 public:
